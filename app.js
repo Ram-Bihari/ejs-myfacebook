@@ -3,11 +3,24 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const passport = require('passport');
+const userModel = require("./routes/users.js");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const { Passport } = require('passport/lib');
+const session = require('express-session');
 
 var app = express();
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: 'fb' 
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(userModel.serializeUser());
+passport.deserializeUser(userModel.deserializeUser());  
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
